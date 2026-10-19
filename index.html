@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java OOP Ordering System & GUI Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        java: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#007396', // Java Blue
+                            600: '#005b77',
+                            700: '#ed8b00', // Java Orange
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        
+        .swing-border {
+            border: 2px solid #334155;
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.05), inset -1px -1px 0px rgba(0,0,0,0.4);
+        }
+        .swing-button {
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            border: 1px solid #1e40af;
+            box-shadow: inset 0px 1px 0px rgba(255,255,255,0.3);
+        }
+        .swing-button:hover {
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+        }
+        .swing-button:active {
+            background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
+            box-shadow: inset 0px 2px 4px rgba(0,0,0,0.4);
+        }
+        .swing-input {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #f8fafc;
+        }
+        .swing-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-tr from-amber-600 to-blue-600 rounded-lg shadow-md">
+                        <i data-lucide="utensils" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+                            Ordering System <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">Java OOP Project</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">GUI Application demonstrating Encapsulation, Inheritance, Polymorphism & Abstraction</p>
+                    </div>
+                </div>
+                
+                <!-- Main Navigation Tabs -->
+                <nav class="flex space-x-1 sm:space-x-2">
+                    <button id="tab-btn-sim" onclick="switchTab('sim')" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 bg-blue-600 text-white shadow">
+                        <i data-lucide="monitor" class="w-4 h-4"></i>
+                        <span>Interactive GUI Simulator</span>
+                    </button>
+                    <button id="tab-btn-code" onclick="switchTab('code')" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:bg-slate-800 hover:text-white">
+                        <i data-lucide="code" class="w-4 h-4"></i>
+                        <span>OrderingApp.java Code</span>
+                    </button>
+                    <button id="tab-btn-uml" onclick="switchTab('uml')" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 text-slate-300 hover:bg-slate-800 hover:text-white">
+                        <i data-lucide="git-fork" class="w-4 h-4"></i>
+                        <span>UML & Defense Matrix</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- ========================================================================= -->
+        <!-- TAB 1: INTERACTIVE SWING APP SIMULATOR -->
+        <!-- ========================================================================= -->
+        <section id="tab-sim" class="tab-content space-y-6">
+            
+            <!-- Java Swing Frame Window Mock Header -->
+            <div class="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden">
+                <div class="bg-slate-800 px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        <span class="ml-3 text-xs font-mono text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="coffee" class="w-3.5 h-3.5 text-amber-500"></i>
+                            javax.swing.JFrame — Restaurant & Cafe Ordering System (v3.0 - OOP Edition)
+                        </span>
+                    </div>
+                    <span class="text-xs font-mono text-slate-400 bg-slate-900/60 px-2 py-1 rounded">Swing LookAndFeel: Metal/Nimbus</span>
+                </div>
+
+                <!-- Dashboard Quick Stats Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-slate-900/50 border-b border-slate-800">
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/60">
+                        <div class="text-xs text-slate-400 font-medium">Catalog Items</div>
+                        <div id="stat-catalog-count" class="text-xl font-bold text-white mt-1">0</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/60">
+                        <div class="text-xs text-slate-400 font-medium">Total Orders Placed</div>
+                        <div id="stat-orders-count" class="text-xl font-bold text-amber-400 mt-1">0</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/60">
+                        <div class="text-xs text-slate-400 font-medium">Active Cart Subtotal</div>
+                        <div id="stat-cart-total" class="text-xl font-bold text-blue-400 mt-1">$0.00</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/60">
+                        <div class="text-xs text-slate-400 font-medium">Completed Sales Revenue</div>
+                        <div id="stat-total-revenue" class="text-xl font-bold text-emerald-400 mt-1">$0.00</div>
+                    </div>
+                </div>
+
+                <!-- Swing Panel Layout Container -->
+                <div class="p-4 sm:p-6 space-y-6">
+                    
+                    <!-- TOP GRID: Menu Catalog & Dynamic Order Builder Cart -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <!-- LEFT (7 cols): Menu Items Catalog & Add to Cart -->
+                        <div class="lg:col-span-7 bg-slate-800/50 p-4 rounded-xl border border-slate-700 flex flex-col justify-between space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                                    <h3 class="font-semibold text-white flex items-center gap-2">
+                                        <i data-lucide="book-open" class="w-4 h-4 text-amber-400"></i>
+                                        <span>Menu Catalog (MenuItem Subclasses)</span>
+                                    </h3>
+                                    <button onclick="toggleCatalogFormModal()" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 px-2.5 py-1.5 rounded transition flex items-center gap-1">
+                                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                        <span>Add New Item</span>
+                                    </button>
+                                </div>
+
+                                <!-- Filter / Search -->
+                                <div class="flex gap-2 my-3">
+                                    <div class="relative flex-1">
+                                        <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400"></i>
+                                        <input type="text" id="catalog-search" oninput="renderCatalog()" placeholder="Search menu items..." class="swing-input pl-8 pr-3 py-1.5 rounded text-xs w-full">
+                                    </div>
+                                    <select id="catalog-filter-cat" onchange="renderCatalog()" class="swing-input px-2.5 py-1.5 rounded text-xs">
+                                        <option value="ALL">All Categories</option>
+                                        <option value="Food">Food (FoodItem)</option>
+                                        <option value="Beverage">Beverage (BeverageItem)</option>
+                                        <option value="Combo">Combo Deal (ComboItem)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Catalog Grid List -->
+                                <div id="catalog-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+                                    <!-- Dynamic Menu Cards Injected Here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT (5 cols): Active Cart & Checkout Builder -->
+                        <div class="lg:col-span-5 bg-slate-800/60 p-4 rounded-xl border border-slate-700 flex flex-col justify-between space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                                    <h3 class="font-semibold text-white flex items-center gap-2">
+                                        <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-400"></i>
+                                        <span>Order Builder Cart</span>
+                                    </h3>
+                                    <button onclick="clearCart()" class="text-xs text-rose-400 hover:underline">Clear Cart</button>
+                                </div>
+
+                                <!-- Cart Customer Info Fields -->
+                                <div class="grid grid-cols-2 gap-2 my-3">
+                                    <div>
+                                        <label class="block text-[11px] text-slate-300 mb-1">Customer Name</label>
+                                        <input type="text" id="cart-customer-name" placeholder="John Doe" class="swing-input w-full px-2.5 py-1 rounded text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] text-slate-300 mb-1">Polymorphic Discount Strategy</label>
+                                        <select id="cart-discount-strategy" onchange="updateCartTotals()" class="swing-input w-full px-2.5 py-1 rounded text-xs cursor-pointer">
+                                            <option value="NONE">No Discount (0%)</option>
+                                            <option value="STUDENT">Student Discount (10%)</option>
+                                            <option value="SENIOR">Senior Citizen (20%)</option>
+                                            <option value="VIP">VIP Tier Discount ($15 off >$50)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Cart Items List -->
+                                <div id="cart-items-container" class="bg-slate-900 border border-slate-700 rounded-lg p-2 max-h-48 overflow-y-auto space-y-2 text-xs">
+                                    <!-- Dynamic Cart Items Injected Here -->
+                                </div>
+                            </div>
+
+                            <!-- Cart Totals & Order Submit Button -->
+                            <div class="pt-3 border-t border-slate-700 space-y-2">
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>Subtotal:</span>
+                                    <span id="cart-subtotal" class="font-mono">$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-slate-400">
+                                    <span>Tax (Dynamic per Item):</span>
+                                    <span id="cart-tax" class="font-mono text-purple-400">$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-amber-400">
+                                    <span>Applied Discount:</span>
+                                    <span id="cart-discount-amt" class="font-mono">-$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm font-bold text-white border-t border-slate-700/60 pt-2">
+                                    <span>Grand Total:</span>
+                                    <span id="cart-grand-total" class="font-mono text-emerald-400">$0.00</span>
+                                </div>
+
+                                <button onclick="processOrderCheckout()" class="swing-button w-full py-2.5 px-4 text-white font-medium text-xs rounded shadow flex items-center justify-center gap-2 mt-2">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                    <span>Submit &amp; Process Order</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- BOTTOM PANEL: Order History & Status Management -->
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700 space-y-4">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-700 pb-3">
+                            <div>
+                                <h3 class="font-semibold text-white flex items-center gap-2">
+                                    <i data-lucide="list-ordered" class="w-4 h-4 text-blue-400"></i>
+                                    <span>Order Management &amp; Status Tracking</span>
+                                </h3>
+                                <p class="text-xs text-slate-400">Manage state transitions (Encapsulated OrderStatus) and view generated receipts.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="order-filter-status" onchange="renderOrdersTable()" class="swing-input px-3 py-1 rounded text-xs cursor-pointer">
+                                    <option value="ALL">All Statuses</option>
+                                    <option value="PENDING">PENDING</option>
+                                    <option value="PREPARING">PREPARING</option>
+                                    <option value="COMPLETED">COMPLETED</option>
+                                    <option value="CANCELLED">CANCELLED</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Orders JTable -->
+                        <div class="overflow-x-auto border border-slate-700 rounded-lg bg-slate-900">
+                            <table class="w-full text-left text-sm border-collapse">
+                                <thead class="bg-slate-800 text-xs uppercase font-mono text-slate-300 border-b border-slate-700">
+                                    <tr>
+                                        <th class="p-3">Order ID</th>
+                                        <th class="p-3">Customer</th>
+                                        <th class="p-3">Items Count</th>
+                                        <th class="p-3 text-right">Total Amount</th>
+                                        <th class="p-3 text-center">Status</th>
+                                        <th class="p-3 text-center">Update Status</th>
+                                        <th class="p-3 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body" class="divide-y divide-slate-800 font-sans text-xs">
+                                    <!-- Order Rows Injected Dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- System Log Console (Simulated JTextArea System.out) -->
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                        <label class="text-[11px] font-mono text-slate-400 block mb-1">Swing Console Output (System.out)</label>
+                        <div id="sim-console" class="bg-slate-950 font-mono text-xs text-emerald-400 p-2.5 rounded h-24 overflow-y-auto border border-slate-800 space-y-1">
+                            <div class="text-slate-500">[System Initialized] Swing Ordering System GUI Loaded. Ready.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 2: READY-TO-RUN SINGLE FILE JAVA SOURCE CODE -->
+        <!-- ========================================================================= -->
+        <section id="tab-code" class="tab-content hidden space-y-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i data-lucide="file-code" class="w-5 h-5 text-blue-400"></i>
+                        <span>OrderingApp.java (Complete Single-File Runnable Source Code)</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Fully object-oriented Swing application ready to compile and run with standard JDK.</p>
+                </div>
+                <button onclick="copyJavaCode()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded shadow flex items-center gap-2 transition">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span id="copy-btn-text">Copy Entire Code</span>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+                <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center text-xs font-mono text-slate-400">
+                    <span>File: OrderingApp.java | Compile: javac OrderingApp.java &amp;&amp; java OrderingApp</span>
+                    <span class="text-emerald-400">JDK 8+ Swing Compatible</span>
+                </div>
+                <pre class="p-4 text-xs font-mono text-slate-300 overflow-x-auto max-h-[700px] leading-relaxed"><code id="java-code-block">// ============================================================================
+// JAVA OBJECT-ORIENTED PROGRAMMING PROJECT: RESTAURANT & CAFE ORDERING SYSTEM
+// File Name: OrderingApp.java
+// Core OOP Pillars: Encapsulation, Inheritance, Polymorphism, Abstraction
+// GUI Framework: Java Swing (JFrame, JTable, JComboBox, JSplitPane, Dialogs)
+// ============================================================================
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+// ============================================================================
+// 1. ABSTRACTION: Interfaces & Abstract Parent Classes
+// ============================================================================
+
+/**
+ * Interface defining contract for order processing entities.
+ */
+interface Orderable {
+    double calculateTotal();
+    String generateReceipt();
+    boolean validateOrder();
+    void applyDiscount(double percent);
+}
+
+/**
+ * Abstract Strategy Class for Discount Strategies (Polymorphism & Abstraction).
+ */
+abstract class DiscountStrategy {
+    private String strategyName;
+
+    public DiscountStrategy(String strategyName) {
+        this.strategyName = strategyName;
+    }
+
+    public String getStrategyName() { return strategyName; }
+    public abstract double calculateDiscount(double rawAmount);
+}
+
+/**
+ * Concrete Discount Strategies
+ */
+class PercentageDiscount extends DiscountStrategy {
+    private double percentage;
+
+    public PercentageDiscount(String name, double percentage) {
+        super(name);
+        this.percentage = percentage;
+    }
+
+    @Override
+    public double calculateDiscount(double rawAmount) {
+        return rawAmount * (percentage / 100.0);
+    }
+}
+
+class VIPDiscount extends DiscountStrategy {
+    public VIPDiscount() {
+        super("VIP Tier Discount ($15 off over $50)");
+    }
+
+    @Override
+    public double calculateDiscount(double rawAmount) {
+        if (rawAmount >= 50.0) {
+            return 15.0;
+        }
+        return rawAmount * 0.05; // 5% fallback
+    }
+}
+
+/**
+ * Abstract Base Class for Menu Items (Abstraction & Encapsulation).
+ */
+abstract class MenuItem {
+    private String id;
+    private String name;
+    private double basePrice;
+    private String category;
+
+    public MenuItem(String id, String name, double basePrice, String category) {
+        this.id = id;
+        this.name = name;
+        setBasePrice(basePrice);
+        this.category = category;
+    }
+
+    // Encapsulation: Getters and Setters with data validation
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public double getBasePrice() { return basePrice; }
+    public void setBasePrice(double basePrice) {
+        if (basePrice &lt; 0) {
+            throw new IllegalArgumentException("Base price cannot be negative.");
+        }
+        this.basePrice = basePrice;
+    }
+
+    public String getCategory() { return category; }
+
+    // Abstract Methods
+    public abstract double calculateTax();
+    public abstract String getItemDetails();
+}
+
+// ============================================================================
+// 2. INHERITANCE & POLYMORPHISM: Concrete Menu Subclasses
+// ============================================================================
+
+class FoodItem extends MenuItem {
+    private boolean isVegetarian;
+    private String prepTime;
+
+    public FoodItem(String id, String name, double basePrice, boolean isVegetarian, String prepTime) {
+        super(id, name, basePrice, "Food");
+        this.isVegetarian = isVegetarian;
+        this.prepTime = prepTime;
+    }
+
+    public boolean isVegetarian() { return isVegetarian; }
+    public String getPrepTime() { return prepTime; }
+
+    @Override
+    public double calculateTax() {
+        return getBasePrice() * 0.08; // 8% food tax
+    }
+
+    @Override
+    public String getItemDetails() {
+        return (isVegetarian ? "[Veg] " : "[Non-Veg] ") + "Prep: " + prepTime;
+    }
+}
+
+class BeverageItem extends MenuItem {
+    private String size; // Small, Medium, Large
+    private boolean isIceCold;
+
+    public BeverageItem(String id, String name, double basePrice, String size, boolean isIceCold) {
+        super(id, name, basePrice, "Beverage");
+        this.size = size;
+        this.isIceCold = isIceCold;
+    }
+
+    public String getSize() { return size; }
+
+    @Override
+    public double calculateTax() {
+        return getBasePrice() * 0.10; // 10% beverage tax
+    }
+
+    @Override
+    public String getItemDetails() {
+        return "Size: " + size + " (" + (isIceCold ? "Iced" : "Hot/Room Temp") + ")";
+    }
+}
+
+class ComboItem extends MenuItem {
+    private List&lt;MenuItem&gt; bundledItems;
+    private double comboDiscountRate; // e.g., 0.15 = 15% off sum
+
+    public ComboItem(String id, String name, List&lt;MenuItem&gt; items, double discountRate) {
+        super(id, name, calculateComboPrice(items, discountRate), "Combo");
+        this.bundledItems = items;
+        this.comboDiscountRate = discountRate;
+    }
+
+    private static double calculateComboPrice(List&lt;MenuItem&gt; items, double discountRate) {
+        double sum = 0;
+        for (MenuItem item : items) sum += item.getBasePrice();
+        return sum * (1.0 - discountRate);
+    }
+
+    @Override
+    public double calculateTax() {
+        return getBasePrice() * 0.07; // 7% special combo tax
+    }
+
+    @Override
+    public String getItemDetails() {
+        return "Bundle (" + bundledItems.size() + " items, " + (int)(comboDiscountRate * 100) + "% off)";
+    }
+}
+
+// ============================================================================
+// 3. ENCAPSULATED ORDER AGGREGATE
+// ============================================================================
+
+enum OrderStatus {
+    PENDING, PREPARING, COMPLETED, CANCELLED
+}
+
+class OrderItem {
+    private MenuItem item;
+    private int quantity;
+
+    public OrderItem(MenuItem item, int quantity) {
+        this.item = item;
+        setQuantity(quantity);
+    }
+
+    public MenuItem getItem() { return item; }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) {
+        if (quantity &lt;= 0) throw new IllegalArgumentException("Quantity must be positive.");
+        this.quantity = quantity;
+    }
+
+    public double calculateSubtotal() {
+        return item.getBasePrice() * quantity;
+    }
+
+    public double calculateTaxTotal() {
+        return item.calculateTax() * quantity;
+    }
+}
+
+class Order implements Orderable {
+    private String orderId;
+    private String customerName;
+    private List&lt;OrderItem&gt; items;
+    private OrderStatus status;
+    private DiscountStrategy discountStrategy;
+
+    public Order(String orderId, String customerName) {
+        this.orderId = orderId;
+        this.customerName = customerName;
+        this.items = new ArrayList&lt;&gt;();
+        this.status = OrderStatus.PENDING;
+        this.discountStrategy = null;
+    }
+
+    public String getOrderId() { return orderId; }
+    public String getCustomerName() { return customerName; }
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
+
+    public void setDiscountStrategy(DiscountStrategy strategy) {
+        this.discountStrategy = strategy;
+    }
+
+    public void addItem(MenuItem item, int qty) {
+        for (OrderItem oi : items) {
+            if (oi.getItem().getId().equalsIgnoreCase(item.getId())) {
+                oi.setQuantity(oi.getQuantity() + qty);
+                return;
+            }
+        }
+        items.add(new OrderItem(item, qty));
+    }
+
+    public List&lt;OrderItem&gt; getItems() { return items; }
+
+    public double calculateSubtotal() {
+        double total = 0;
+        for (OrderItem oi : items) total += oi.calculateSubtotal();
+        return total;
+    }
+
+    public double calculateTotalTax() {
+        double tax = 0;
+        for (OrderItem oi : items) tax += oi.calculateTaxTotal();
+        return tax;
+    }
+
+    public double calculateDiscountAmount() {
+        if (discountStrategy == null) return 0.0;
+        return discountStrategy.calculateDiscount(calculateSubtotal());
+    }
+
+    @Override
+    public double calculateTotal() {
+        return calculateSubtotal() + calculateTotalTax() - calculateDiscountAmount();
+    }
+
+    @Override
+    public boolean validateOrder() {
+        return !items.isEmpty() &amp;&amp; customerName != null &amp;&amp; !customerName.trim().isEmpty();
+    }
+
+    @Override
+    public void applyDiscount(double percent) {
+        this.discountStrategy = new PercentageDiscount("Manual " + percent + "%", percent);
+    }
+
+    @Override
+    public String generateReceipt() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=========================================\n");
+        sb.append("          RESTAURANT RECEIPT             \n");
+        sb.append("Order ID: ").append(orderId).append("\n");
+        sb.append("Customer: ").append(customerName).append("\n");
+        sb.append("Status:   ").append(status).append("\n");
+        sb.append("-----------------------------------------\n");
+        for (OrderItem oi : items) {
+            sb.append(String.format("%-20s x%-2d  $%6.2f\n", 
+                oi.getItem().getName(), oi.getQuantity(), oi.calculateSubtotal()));
+        }
+        sb.append("-----------------------------------------\n");
+        sb.append(String.format("Subtotal:            $%8.2f\n", calculateSubtotal()));
+        sb.append(String.format("Tax:                 $%8.2f\n", calculateTotalTax()));
+        if (discountStrategy != null) {
+            sb.append(String.format("Discount (%s): -$%7.2f\n", 
+                discountStrategy.getStrategyName(), calculateDiscountAmount()));
+        }
+        sb.append(String.format("GRAND TOTAL:         $%8.2f\n", calculateTotal()));
+        sb.append("=========================================\n");
+        return sb.toString();
+    }
+}
+
+// ============================================================================
+// 4. GUI APPLICATION MAIN FRAME
+// ============================================================================
+
+public class OrderingApp extends JFrame {
+    private List&lt;MenuItem&gt; catalog;
+    private List&lt;Order&gt; orderHistory;
+    private Order activeCart;
+
+    private DefaultTableModel catalogModel;
+    private DefaultTableModel ordersModel;
+    private JTable ordersTable;
+    private JLabel lblCartSubtotal, lblCartTax, lblCartTotal;
+
+    public OrderingApp() {
+        catalog = new ArrayList&lt;&gt;();
+        orderHistory = new ArrayList&lt;&gt;();
+        activeCart = new Order("ORD-001", "Guest");
+
+        seedCatalogData();
+        initUI();
+    }
+
+    private void seedCatalogData() {
+        catalog.add(new FoodItem("FOOD-1", "Gourmet Burger", 12.99, false, "15 mins"));
+        catalog.add(new FoodItem("FOOD-2", "Veggie Pasta", 10.50, true, "12 mins"));
+        catalog.add(new BeverageItem("BEV-1", "Iced Espresso", 4.50, "Medium", true));
+        catalog.add(new BeverageItem("BEV-2", "Green Tea", 3.25, "Large", false));
+        
+        List&lt;MenuItem&gt; comboSet = new ArrayList&lt;&gt;();
+        comboSet.add(catalog.get(0));
+        comboSet.add(catalog.get(2));
+        catalog.add(new ComboItem("CMB-1", "Burger &amp; Iced Coffee Meal", comboSet, 0.15));
+    }
+
+    private void initUI() {
+        setTitle("Java OOP Restaurant Ordering System");
+        setSize(950, 650);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
+
+        // Header
+        JPanel header = new JPanel();
+        header.setBackground(new Color(0, 115, 150));
+        JLabel title = new JLabel("RESTAURANT ORDERING SYSTEM (Java OOP Project)");
+        title.setFont(new Font("SansSerif", Font.BOLD, 18));
+        title.setForeground(Color.WHITE);
+        header.add(title);
+        add(header, BorderLayout.NORTH);
+
+        // Main Center Panel
+        JSplitPane mainSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        mainSplit.setDividerLocation(360);
+
+        // Top Split: Catalog &amp; Cart
+        JSplitPane topSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        topSplit.setDividerLocation(520);
+
+        // Catalog Panel
+        JPanel catalogPanel = new JPanel(new BorderLayout(5, 5));
+        catalogPanel.setBorder(BorderFactory.createTitledBorder("Menu Catalog (Polymorphic Items)"));
+        
+        String[] cols = {"ID", "Name", "Category", "Price ($)", "Details"};
+        catalogModel = new DefaultTableModel(cols, 0);
+        JTable catalogTable = new JTable(catalogModel);
+        refreshCatalogTable();
+
+        catalogPanel.add(new JScrollPane(catalogTable), BorderLayout.CENTER);
+
+        JButton btnAddToCart = new JButton("Add Selected to Cart");
+        btnAddToCart.addActionListener(e -&gt; {
+            int row = catalogTable.getSelectedRow();
+            if (row &gt;= 0) {
+                String id = (String) catalogModel.getValueAt(row, 0);
+                MenuItem item = findCatalogItem(id);
+                if (item != null) {
+                    activeCart.addItem(item, 1);
+                    updateCartUI();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Select a item from catalog first!");
+            }
+        });
+        catalogPanel.add(btnAddToCart, BorderLayout.SOUTH);
+
+        topSplit.setLeftComponent(catalogPanel);
+
+        // Cart Panel
+        JPanel cartPanel = new JPanel(new BorderLayout(5, 5));
+        cartPanel.setBorder(BorderFactory.createTitledBorder("Active Cart"));
+        
+        lblCartSubtotal = new JLabel("Subtotal: $0.00");
+        lblCartTax = new JLabel("Tax: $0.00");
+        lblCartTotal = new JLabel("Total: $0.00");
+
+        JPanel cartTotalsPanel = new JPanel(new GridLayout(3, 1));
+        cartTotalsPanel.add(lblCartSubtotal);
+        cartTotalsPanel.add(lblCartTax);
+        cartTotalsPanel.add(lblCartTotal);
+
+        cartPanel.add(cartTotalsPanel, BorderLayout.CENTER);
+
+        JButton btnSubmitOrder = new JButton("Submit &amp; Process Order");
+        btnSubmitOrder.addActionListener(e -&gt; {
+            if (!activeCart.validateOrder()) {
+                JOptionPane.showMessageDialog(this, "Cart is empty! Add items before checkout.");
+                return;
+            }
+            orderHistory.add(activeCart);
+            refreshOrdersTable();
+            JOptionPane.showMessageDialog(this, "Order Submitted!\n" + activeCart.generateReceipt());
+            
+            // Reset Cart
+            activeCart = new Order("ORD-00" + (orderHistory.size() + 1), "Customer " + (orderHistory.size() + 1));
+            updateCartUI();
+        });
+        cartPanel.add(btnSubmitOrder, BorderLayout.SOUTH);
+
+        topSplit.setRightComponent(cartPanel);
+        mainSplit.setTopComponent(topSplit);
+
+        // Bottom Split: Order History Table
+        JPanel ordersPanel = new JPanel(new BorderLayout(5, 5));
+        ordersPanel.setBorder(BorderFactory.createTitledBorder("Order Management &amp; History"));
+
+        String[] orderCols = {"Order ID", "Customer", "Subtotal ($)", "Total Tax ($)", "Grand Total ($)", "Status"};
+        ordersModel = new DefaultTableModel(orderCols, 0);
+        ordersTable = new JTable(ordersModel);
+
+        ordersPanel.add(new JScrollPane(ordersTable), BorderLayout.CENTER);
+        mainSplit.setBottomComponent(ordersPanel);
+
+        add(mainSplit, BorderLayout.CENTER);
+    }
+
+    private MenuItem findCatalogItem(String id) {
+        for (MenuItem item : catalog) {
+            if (item.getId().equalsIgnoreCase(id)) return item;
+        }
+        return null;
+    }
+
+    private void refreshCatalogTable() {
+        catalogModel.setRowCount(0);
+        for (MenuItem item : catalog) {
+            catalogModel.addRow(new Object[]{
+                item.getId(),
+                item.getName(),
+                item.getCategory(),
+                String.format("%.2f", item.getBasePrice()),
+                item.getItemDetails()
+            });
+        }
+    }
+
+    private void updateCartUI() {
+        lblCartSubtotal.setText(String.format("Subtotal: $%.2f", activeCart.calculateSubtotal()));
+        lblCartTax.setText(String.format("Tax: $%.2f", activeCart.calculateTotalTax()));
+        lblCartTotal.setText(String.format("Total: $%.2f", activeCart.calculateTotal()));
+    }
+
+    private void refreshOrdersTable() {
+        ordersModel.setRowCount(0);
+        for (Order o : orderHistory) {
+            ordersModel.addRow(new Object[]{
+                o.getOrderId(),
+                o.getCustomerName(),
+                String.format("%.2f", o.calculateSubtotal()),
+                String.format("%.2f", o.calculateTotalTax()),
+                String.format("%.2f", o.calculateTotal()),
+                o.getStatus()
+            });
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; {
+            new OrderingApp().setVisible(true);
+        });
+    }
+}
+</code></pre>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- TAB 3: UML DIAGRAM & OOP PILLARS DEFENSE MATRIX -->
+        <!-- ========================================================================= -->
+        <section id="tab-uml" class="tab-content hidden space-y-8">
+            
+            <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i data-lucide="git-fork" class="w-6 h-6 text-purple-400"></i>
+                    <span>UML Class Diagram &amp; Section IX Documentation</span>
+                </h2>
+                <p class="text-sm text-slate-400 mt-1">This section explicitly fulfills Section VIII (UML Class Diagram) and Section IX (OOP Implementation Documentation) required for your project defense.</p>
+            </div>
+
+            <!-- Visual SVG UML Class Diagram -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
+                <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-2">Visual UML System Architecture Diagram</h3>
+                
+                <div class="bg-slate-950 p-6 rounded-lg border border-slate-800 overflow-x-auto flex flex-col items-center gap-8 font-mono text-xs text-slate-200">
+                    
+                    <!-- Top Interfaces Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-3xl">
+                        <!-- Interface 1 -->
+                        <div class="border-2 border-dashed border-amber-500/60 bg-slate-900 p-3 rounded-lg text-center shadow-lg">
+                            <div class="text-amber-400 italic text-[10px]">&lt;&lt;interface&gt;&gt;</div>
+                            <div class="font-bold text-white text-sm">Orderable</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-left text-[11px] text-amber-300 space-y-0.5">
+                                <div>+ calculateTotal() : double</div>
+                                <div>+ generateReceipt() : String</div>
+                                <div>+ validateOrder() : boolean</div>
+                            </div>
+                        </div>
+
+                        <!-- Interface/Abstract 2 -->
+                        <div class="border-2 border-dashed border-purple-500/60 bg-slate-900 p-3 rounded-lg text-center shadow-lg">
+                            <div class="text-purple-400 italic text-[10px]">&lt;&lt;abstract class&gt;&gt;</div>
+                            <div class="font-bold text-white text-sm">DiscountStrategy</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-left text-[11px] text-purple-300 space-y-0.5">
+                                <div># strategyName : String</div>
+                                <div>+ calculateDiscount(amt: double) : double</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-slate-500 font-bold">▲ Realizes / Inherits</div>
+
+                    <!-- Abstract Base Class -->
+                    <div class="border-2 border-blue-500 bg-slate-900 p-4 rounded-lg w-80 shadow-xl">
+                        <div class="text-blue-400 italic text-[10px]">&lt;&lt;abstract class&gt;&gt;</div>
+                        <div class="font-bold text-white text-sm text-center">MenuItem</div>
+                        <div class="border-t border-slate-700 my-2"></div>
+                        <div class="text-left space-y-0.5 text-slate-300">
+                            <div>- id : String</div>
+                            <div>- name : String</div>
+                            <div>- basePrice : double</div>
+                            <div>- category : String</div>
+                        </div>
+                        <div class="border-t border-slate-700 my-2"></div>
+                        <div class="text-left space-y-0.5 text-slate-300">
+                            <div>+ getBasePrice() / setBasePrice(val)</div>
+                            <div class="text-blue-300 font-semibold italic">+ calculateTax() : double</div>
+                            <div class="text-blue-300 font-semibold italic">+ getItemDetails() : String</div>
+                        </div>
+                    </div>
+
+                    <div class="text-slate-500 font-bold">▲ Extends (Inheritance)</div>
+
+                    <!-- Subclasses Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+                        <div class="border border-emerald-500/60 bg-slate-900 p-3 rounded-lg">
+                            <div class="font-bold text-emerald-400 text-center">FoodItem</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-slate-300 text-[10px]">- isVegetarian : boolean</div>
+                            <div class="text-slate-300 text-[10px]">- prepTime : String</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-emerald-300 text-[10px]">+ calculateTax() [8%]</div>
+                        </div>
+
+                        <div class="border border-amber-500/60 bg-slate-900 p-3 rounded-lg">
+                            <div class="font-bold text-amber-400 text-center">BeverageItem</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-slate-300 text-[10px]">- size : String</div>
+                            <div class="text-slate-300 text-[10px]">- isIceCold : boolean</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-amber-300 text-[10px]">+ calculateTax() [10%]</div>
+                        </div>
+
+                        <div class="border border-purple-500/60 bg-slate-900 p-3 rounded-lg">
+                            <div class="font-bold text-purple-400 text-center">ComboItem</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-slate-300 text-[10px]">- bundledItems : List</div>
+                            <div class="text-slate-300 text-[10px]">- comboDiscount : double</div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="text-purple-300 text-[10px]">+ calculateTax() [7%]</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Four Pillars Breakdown Matrix Table (Section IX Requirement) -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
+                <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-2">
+                    Section IX: OOP Pillar Defense Matrix &amp; Line Mapping
+                </h3>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-800 text-slate-200 border-b border-slate-700 font-mono">
+                                <th class="p-3 w-32">OOP Pillar</th>
+                                <th class="p-3 w-48">Classes / Interfaces Involved</th>
+                                <th class="p-3">Implementation Details &amp; Purpose</th>
+                                <th class="p-3 w-48">Oral Presentation Script</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <!-- Encapsulation -->
+                            <tr class="hover:bg-slate-800/40">
+                                <td class="p-3 font-semibold text-emerald-400 flex items-center gap-1.5">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                    1. Encapsulation
+                                </td>
+                                <td class="p-3 font-mono text-slate-200">
+                                    MenuItem<br>
+                                    Order<br>
+                                    OrderItem<br>
+                                    OrderStatus (Enum)
+                                </td>
+                                <td class="p-3">
+                                    All attributes (e.g. <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">basePrice</code>, <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">status</code>, <code class="bg-slate-800 px-1 py-0.5 rounded text-amber-300">quantity</code>) are marked <code class="text-rose-400">private</code>. Public getters and setters enforce business invariant logic, throwing <code class="text-rose-300">IllegalArgumentException</code> when invalid quantities or negative prices are passed.
+                                </td>
+                                <td class="p-3 text-slate-400 italic">
+                                    "We strictly protected class state by making fields private and validating values inside setters, preventing invalid states like negative pricing or empty orders."
+                                </td>
+                            </tr>
+
+                            <!-- Inheritance -->
+                            <tr class="hover:bg-slate-800/40">
+                                <td class="p-3 font-semibold text-blue-400 flex items-center gap-1.5">
+                                    <i data-lucide="layers" class="w-4 h-4"></i>
+                                    2. Inheritance
+                                </td>
+                                <td class="p-3 font-mono text-slate-200">
+                                    Parent: MenuItem<br>
+                                    Children: FoodItem, BeverageItem, ComboItem
+                                </td>
+                                <td class="p-3">
+                                    Subclasses extend <code class="text-blue-400">MenuItem</code> using <code class="text-purple-400">super(id, name, price, category)</code> to inherit common attributes while introducing category-specific variables like <code class="text-amber-300">isVegetarian</code> or drink sizes.
+                                </td>
+                                <td class="p-3 text-slate-400 italic">
+                                    "Inheritance allows specialized items like Food and Beverages to share code from MenuItem while declaring unique attributes like drink size or prep time."
+                                </td>
+                            </tr>
+
+                            <!-- Polymorphism -->
+                            <tr class="hover:bg-slate-800/40">
+                                <td class="p-3 font-semibold text-purple-400 flex items-center gap-1.5">
+                                    <i data-lucide="shuffle" class="w-4 h-4"></i>
+                                    3. Polymorphism
+                                </td>
+                                <td class="p-3 font-mono text-slate-200">
+                                    calculateTax()<br>
+                                    getItemDetails()<br>
+                                    DiscountStrategy
+                                </td>
+                                <td class="p-3">
+                                    Dynamic method dispatch is demonstrated: food items apply an 8% tax rate, beverages 10%, and combo deals 7%. Furthermore, <code class="text-amber-400">DiscountStrategy</code> implementations (<code class="text-slate-200">PercentageDiscount</code> vs <code class="text-slate-200">VIPDiscount</code>) dynamically calculate discounts at checkout.
+                                </td>
+                                <td class="p-3 text-slate-400 italic">
+                                    "We store all items in a single List&lt;MenuItem&gt;, but when calculating tax or discount, Java dynamically calls each subclass's unique overridden method."
+                                </td>
+                            </tr>
+
+                            <!-- Abstraction -->
+                            <tr class="hover:bg-slate-800/40">
+                                <td class="p-3 font-semibold text-amber-400 flex items-center gap-1.5">
+                                    <i data-lucide="box" class="w-4 h-4"></i>
+                                    4. Abstraction
+                                </td>
+                                <td class="p-3 font-mono text-slate-200">
+                                    interface Orderable<br>
+                                    abstract class MenuItem<br>
+                                    DiscountStrategy
+                                </td>
+                                <td class="p-3">
+                                    The <code class="text-amber-400">Orderable</code> interface defines contracts (<code class="text-amber-300">calculateTotal()</code>, <code class="text-amber-300">generateReceipt()</code>) without revealing implementation mechanics. <code class="text-blue-400">abstract class MenuItem</code> prevents direct instantiation while enforcing subclass implementation contracts.
+                                </td>
+                                <td class="p-3 text-slate-400 italic">
+                                    "Abstraction establishes standardized contracts across our ordering models without exposing unnecessary internal implementation details."
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- CREATE CATALOG ITEM MODAL -->
+    <div id="modal-catalog-form" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-white flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-amber-400"></i>
+                    <span>Add New Menu Catalog Item</span>
+                </h3>
+                <button onclick="toggleCatalogFormModal()" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <form id="catalog-form" onsubmit="handleCreateCatalogItem(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-300 mb-1">Item ID (e.g. FOOD-101)</label>
+                    <input type="text" id="input-item-id" required placeholder="FOOD-101" class="swing-input w-full p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-slate-300 mb-1">Item Name</label>
+                    <input type="text" id="input-item-name" required placeholder="Cheese Pizza" class="swing-input w-full p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-slate-300 mb-1">Base Price ($)</label>
+                    <input type="number" step="0.01" id="input-item-price" required min="0" placeholder="14.99" class="swing-input w-full p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-slate-300 mb-1">Subclass Category (Polymorphism)</label>
+                    <select id="input-item-category" onchange="updateDynamicCatalogFormFields()" class="swing-input w-full p-2 rounded cursor-pointer">
+                        <option value="Food">Food (FoodItem)</option>
+                        <option value="Beverage">Beverage (BeverageItem)</option>
+                    </select>
+                </div>
+
+                <div id="dynamic-catalog-fields" class="p-3 bg-slate-950 rounded border border-slate-800 space-y-2">
+                    <!-- Dynamic child fields injected here -->
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="toggleCatalogFormModal()" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded hover:bg-slate-700">Cancel</button>
+                    <button type="submit" class="px-4 py-1.5 bg-amber-600 text-white rounded font-medium hover:bg-amber-500">Save to Catalog</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RECEIPT VIEWER MODAL -->
+    <div id="modal-receipt" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-md shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-white flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-5 h-5 text-emerald-400"></i>
+                    <span>Generated Order Receipt</span>
+                </h3>
+                <button onclick="closeReceiptModal()" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+
+            <pre id="receipt-text-block" class="bg-slate-950 p-4 rounded border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-80">
+                <!-- Receipt text string injected here -->
+            </pre>
+
+            <div class="flex justify-end pt-2 border-t border-slate-800">
+                <button onclick="closeReceiptModal()" class="px-4 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-500">Close Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // SIMULATED JAVA OOP CLASS STRUCTURES IN JAVASCRIPT
+        // ====================================================================
+
+        // Abstract Class MenuItem
+        class MenuItem {
+            constructor(id, name, basePrice, category) {
+                if (this.constructor === MenuItem) {
+                    throw new Error("Cannot instantiate abstract class MenuItem directly.");
+                }
+                this._id = id;
+                this._name = name;
+                this.setBasePrice(basePrice);
+                this._category = category;
+            }
+
+            getId() { return this._id; }
+            getName() { return this._name; }
+            getBasePrice() { return this._basePrice; }
+            setBasePrice(price) {
+                if (price < 0) throw new Error("Validation Error: Price cannot be negative.");
+                this._basePrice = parseFloat(price);
+            }
+            getCategory() { return this._category; }
+
+            calculateTax() { throw new Error("Abstract method calculateTax() must be implemented."); }
+            getItemDetails() { throw new Error("Abstract method getItemDetails() must be implemented."); }
+        }
+
+        // Child Class: FoodItem
+        class FoodItem extends MenuItem {
+            constructor(id, name, basePrice, isVegetarian, prepTime) {
+                super(id, name, basePrice, "Food");
+                this._isVegetarian = isVegetarian;
+                this._prepTime = prepTime;
+            }
+
+            calculateTax() { return this.getBasePrice() * 0.08; } // 8% Tax
+            getItemDetails() { return `${this._isVegetarian ? '[Veg]' : '[Non-Veg]'} Prep: ${this._prepTime}`; }
+        }
+
+        // Child Class: BeverageItem
+        class BeverageItem extends MenuItem {
+            constructor(id, name, basePrice, size, isIceCold) {
+                super(id, name, basePrice, "Beverage");
+                this._size = size;
+                this._isIceCold = isIceCold;
+            }
+
+            calculateTax() { return this.getBasePrice() * 0.10; } // 10% Tax
+            getItemDetails() { return `Size: ${this._size} (${this._isIceCold ? 'Iced' : 'Warm'})`; }
+        }
+
+        // Child Class: ComboItem
+        class ComboItem extends MenuItem {
+            constructor(id, name, itemsList, discountRate) {
+                const sum = itemsList.reduce((acc, i) => acc + i.getBasePrice(), 0);
+                const comboPrice = sum * (1.0 - discountRate);
+                super(id, name, comboPrice, "Combo");
+                this._bundledItems = itemsList;
+                this._discountRate = discountRate;
+            }
+
+            calculateTax() { return this.getBasePrice() * 0.07; } // 7% Combo Tax
+            getItemDetails() { return `Bundle (${this._bundledItems.length} items, ${Math.round(this._discountRate * 100)}% off)`; }
+        }
+
+        // Strategy Pattern for Discounts
+        class DiscountStrategy {
+            constructor(name) { this.name = name; }
+            calculateDiscount(rawAmount) { return 0; }
+        }
+
+        class StudentDiscount extends DiscountStrategy {
+            constructor() { super("Student Discount (10%)"); }
+            calculateDiscount(rawAmount) { return rawAmount * 0.10; }
+        }
+
+        class SeniorDiscount extends DiscountStrategy {
+            constructor() { super("Senior Citizen Discount (20%)"); }
+            calculateDiscount(rawAmount) { return rawAmount * 0.20; }
+        }
+
+        class VIPDiscount extends DiscountStrategy {
+            constructor() { super("VIP Tier ($15 off > $50)"); }
+            calculateDiscount(rawAmount) {
+                return rawAmount >= 50 ? 15.0 : rawAmount * 0.05;
+            }
+        }
+
+        // Order & Cart State
+        class OrderItem {
+            constructor(item, qty) {
+                this.item = item;
+                this.quantity = qty;
+            }
+            calculateSubtotal() { return this.item.getBasePrice() * this.quantity; }
+            calculateTax() { return this.item.calculateTax() * this.quantity; }
+        }
+
+        class Order {
+            constructor(id, customerName) {
+                this.id = id;
+                this.customerName = customerName;
+                this.items = [];
+                this.status = "PENDING";
+                this.discountStrategy = null;
+            }
+
+            addItem(item, qty) {
+                const existing = this.items.find(i => i.item.getId() === item.getId());
+                if (existing) {
+                    existing.quantity += qty;
+                } else {
+                    this.items.push(new OrderItem(item, qty));
+                }
+            }
+
+            removeItem(itemId) {
+                this.items = this.items.filter(i => i.item.getId() !== itemId);
+            }
+
+            calculateSubtotal() {
+                return this.items.reduce((sum, i) => sum + i.calculateSubtotal(), 0);
+            }
+
+            calculateTotalTax() {
+                return this.items.reduce((sum, i) => sum + i.calculateTax(), 0);
+            }
+
+            calculateDiscountAmount() {
+                if (!this.discountStrategy) return 0;
+                return this.discountStrategy.calculateDiscount(this.calculateSubtotal());
+            }
+
+            calculateGrandTotal() {
+                return this.calculateSubtotal() + this.calculateTotalTax() - this.calculateDiscountAmount();
+            }
+
+            generateReceipt() {
+                let receipt = `=========================================\n`;
+                receipt += `        RESTAURANT RECEIPT               \n`;
+                receipt += `Order ID: ${this.id}\n`;
+                receipt += `Customer: ${this.customerName}\n`;
+                receipt += `Status:   ${this.status}\n`;
+                receipt += `-----------------------------------------\n`;
+                this.items.forEach(oi => {
+                    receipt += `${oi.item.getName().padEnd(20)} x${oi.quantity}  $${oi.calculateSubtotal().toFixed(2)}\n`;
+                });
+                receipt += `-----------------------------------------\n`;
+                receipt += `Subtotal:            $${this.calculateSubtotal().toFixed(2)}\n`;
+                receipt += `Tax:                 $${this.calculateTotalTax().toFixed(2)}\n`;
+                if (this.discountStrategy) {
+                    receipt += `Discount (${this.discountStrategy.name}): -$${this.calculateDiscountAmount().toFixed(2)}\n`;
+                }
+                receipt += `GRAND TOTAL:         $${this.calculateGrandTotal().toFixed(2)}\n`;
+                receipt += `=========================================\n`;
+                return receipt;
+            }
+        }
+
+        // Global State Variables
+        let menuCatalog = [];
+        let activeCart = new Order("ORD-001", "Guest Customer");
+        let ordersHistory = [];
+
+        window.onload = function() {
+            lucide.createIcons();
+            seedCatalog();
+            renderCatalog();
+            updateCartTotals();
+            updateDynamicCatalogFormFields();
+        };
+
+        function seedCatalog() {
+            menuCatalog = [
+                new FoodItem("FOOD-1", "Gourmet Cheeseburger", 12.99, false, "15 mins"),
+                new FoodItem("FOOD-2", "Artisanal Veggie Pasta", 10.50, true, "12 mins"),
+                new BeverageItem("BEV-1", "Cold Brew Iced Coffee", 4.50, "Medium", true),
+                new BeverageItem("BEV-2", "Organic Matcha Latte", 5.25, "Large", false)
+            ];
+
+            // Add Combo
+            const comboItems = [menuCatalog[0], menuCatalog[2]];
+            menuCatalog.push(new ComboItem("CMB-1", "Cheeseburger & Cold Brew Meal", comboItems, 0.15));
+
+            logConsole("Menu catalog initialized with Food, Beverage, and Combo objects.");
+        }
+
+        // ====================================================================
+        // RENDER LOGIC
+        // ====================================================================
+
+        function renderCatalog() {
+            const container = document.getElementById("catalog-list-container");
+            const search = document.getElementById("catalog-search").value.toLowerCase();
+            const filter = document.getElementById("catalog-filter-cat").value;
+
+            container.innerHTML = "";
+
+            let count = 0;
+            menuCatalog.forEach(item => {
+                const matchesSearch = item.getName().toLowerCase().includes(search) || item.getId().toLowerCase().includes(search);
+                const matchesCat = (filter === "ALL" || item.getCategory() === filter);
+
+                if (matchesSearch && matchesCat) {
+                    count++;
+                    const card = document.createElement("div");
+                    card.className = "bg-slate-900 p-3 rounded-lg border border-slate-700/80 flex flex-col justify-between space-y-2 hover:border-slate-600 transition";
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <span class="font-mono text-[10px] text-blue-400">${item.getId()}</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded border ${getCategoryStyle(item.getCategory())}">${item.getCategory()}</span>
+                            </div>
+                            <h4 class="font-semibold text-white text-xs mt-1">${item.getName()}</h4>
+                            <p class="text-[11px] text-slate-400 font-mono mt-0.5">${item.getItemDetails()}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                            <span class="font-mono text-xs font-bold text-emerald-400">$${item.getBasePrice().toFixed(2)}</span>
+                            <button onclick="addToCart('${item.getId()}')" class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] px-2.5 py-1 rounded flex items-center gap-1 transition">
+                                <i data-lucide="plus" class="w-3 h-3"></i> Add
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+
+            document.getElementById("stat-catalog-count").innerText = menuCatalog.length;
+            lucide.createIcons();
+        }
+
+        function getCategoryStyle(cat) {
+            switch(cat) {
+                case "Food": return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+                case "Beverage": return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+                case "Combo": return "bg-purple-500/10 text-purple-400 border-purple-500/30";
+                default: return "bg-slate-700 text-slate-300";
+            }
+        }
+
+        function addToCart(itemId) {
+            const item = menuCatalog.find(i => i.getId() === itemId);
+            if (!item) return;
+
+            activeCart.addItem(item, 1);
+            logConsole(`Added "${item.getName()}" to active order cart.`);
+            renderCartUI();
+        }
+
+        function renderCartUI() {
+            const container = document.getElementById("cart-items-container");
+            container.innerHTML = "";
+
+            if (activeCart.items.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-500 py-6 italic">Cart is empty. Add items from catalog.</div>`;
+            } else {
+                activeCart.items.forEach(oi => {
+                    const row = document.createElement("div");
+                    row.className = "flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-800";
+                    row.innerHTML = `
+                        <div class="flex-1">
+                            <div class="font-medium text-white">${oi.item.getName()}</div>
+                            <div class="text-[10px] text-slate-400">$${oi.item.getBasePrice().toFixed(2)} x ${oi.quantity}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-emerald-400 font-bold">$${oi.calculateSubtotal().toFixed(2)}</span>
+                            <button onclick="removeFromCart('${oi.item.getId()}')" class="text-rose-400 hover:bg-slate-800 p-1 rounded">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            updateCartTotals();
+            lucide.createIcons();
+        }
+
+        function removeFromCart(itemId) {
+            activeCart.removeItem(itemId);
+            renderCartUI();
+        }
+
+        function clearCart() {
+            activeCart.items = [];
+            renderCartUI();
+        }
+
+        function updateCartTotals() {
+            const stratVal = document.getElementById("cart-discount-strategy").value;
+            if (stratVal === "STUDENT") activeCart.discountStrategy = new StudentDiscount();
+            else if (stratVal === "SENIOR") activeCart.discountStrategy = new SeniorDiscount();
+            else if (stratVal === "VIP") activeCart.discountStrategy = new VIPDiscount();
+            else activeCart.discountStrategy = null;
+
+            const subtotal = activeCart.calculateSubtotal();
+            const tax = activeCart.calculateTotalTax();
+            const discount = activeCart.calculateDiscountAmount();
+            const grandTotal = activeCart.calculateGrandTotal();
+
+            document.getElementById("cart-subtotal").innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById("cart-tax").innerText = `$${tax.toFixed(2)}`;
+            document.getElementById("cart-discount-amt").innerText = `-$${discount.toFixed(2)}`;
+            document.getElementById("cart-grand-total").innerText = `$${grandTotal.toFixed(2)}`;
+            document.getElementById("stat-cart-total").innerText = `$${grandTotal.toFixed(2)}`;
+        }
+
+        function processOrderCheckout() {
+            const custName = document.getElementById("cart-customer-name").value.trim();
+            if (!custName) {
+                alert("Validation Error: Please enter a Customer Name for this order.");
+                return;
+            }
+
+            if (activeCart.items.length === 0) {
+                alert("Validation Error: Cannot submit an empty order cart.");
+                return;
+            }
+
+            activeCart.customerName = custName;
+            ordersHistory.push(activeCart);
+
+            logConsole(`[Order Submitted] Order ID ${activeCart.id} placed for ${custName}. Total: $${activeCart.calculateGrandTotal().toFixed(2)}`);
+            
+            showReceiptModal(activeCart.generateReceipt());
+
+            // Reset Active Cart
+            activeCart = new Order(`ORD-00${ordersHistory.length + 1}`, "Guest Customer");
+            document.getElementById("cart-customer-name").value = "";
+            renderCartUI();
+            renderOrdersTable();
+        }
+
+        // ====================================================================
+        // ORDER HISTORY & STATUS MANAGEMENT
+        // ====================================================================
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById("orders-table-body");
+            const filterStatus = document.getElementById("order-filter-status").value;
+
+            tbody.innerHTML = "";
+
+            let revenueSum = 0;
+
+            ordersHistory.forEach(order => {
+                if (order.status === "COMPLETED") {
+                    revenueSum += order.calculateGrandTotal();
+                }
+
+                if (filterStatus === "ALL" || order.status === filterStatus) {
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-slate-800/60 border-b border-slate-800";
+                    tr.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-blue-400">${order.id}</td>
+                        <td class="p-3 text-white font-medium">${order.customerName}</td>
+                        <td class="p-3">${order.items.length} items</td>
+                        <td class="p-3 text-right font-mono text-emerald-400 font-bold">$${order.calculateGrandTotal().toFixed(2)}</td>
+                        <td class="p-3 text-center">
+                            <span class="px-2 py-0.5 text-[10px] rounded border font-mono font-bold ${getStatusBadgeStyle(order.status)}">
+                                ${order.status}
+                            </span>
+                        </td>
+                        <td class="p-3 text-center">
+                            <select onchange="updateOrderStatus('${order.id}', this.value)" class="swing-input px-2 py-1 rounded text-xs">
+                                <option value="PENDING" ${order.status === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                                <option value="PREPARING" ${order.status === 'PREPARING' ? 'selected' : ''}>PREPARING</option>
+                                <option value="COMPLETED" ${order.status === 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                                <option value="CANCELLED" ${order.status === 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center">
+                            <button onclick="viewOrderReceipt('${order.id}')" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200">
+                                Receipt
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            document.getElementById("stat-orders-count").innerText = ordersHistory.length;
+            document.getElementById("stat-total-revenue").innerText = `$${revenueSum.toFixed(2)}`;
+        }
+
+        function getStatusBadgeStyle(status) {
+            switch(status) {
+                case "PENDING": return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+                case "PREPARING": return "bg-blue-500/10 text-blue-400 border-blue-500/30";
+                case "COMPLETED": return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+                case "CANCELLED": return "bg-rose-500/10 text-rose-400 border-rose-500/30";
+                default: return "bg-slate-800 text-slate-300";
+            }
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = ordersHistory.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                logConsole(`Order ${orderId} state transitioned to [${newStatus}]`);
+                renderOrdersTable();
+            }
+        }
+
+        function viewOrderReceipt(orderId) {
+            const order = ordersHistory.find(o => o.id === orderId);
+            if (order) showReceiptModal(order.generateReceipt());
+        }
+
+        // Modals
+        function toggleCatalogFormModal() {
+            document.getElementById("modal-catalog-form").classList.toggle("hidden");
+        }
+
+        function updateDynamicCatalogFormFields() {
+            const cat = document.getElementById("input-item-category").value;
+            const container = document.getElementById("dynamic-catalog-fields");
+
+            if (cat === "Food") {
+                container.innerHTML = `
+                    <label class="block text-slate-300 mb-1">Preparation Time</label>
+                    <input type="text" id="input-prep-time" placeholder="10 mins" required class="swing-input w-full p-1.5 rounded">
+                    <label class="flex items-center gap-2 mt-2 text-slate-300">
+                        <input type="checkbox" id="input-is-veg" class="rounded bg-slate-900 border-slate-700">
+                        <span>Vegetarian Dish</span>
+                    </label>
+                `;
+            } else {
+                container.innerHTML = `
+                    <label class="block text-slate-300 mb-1">Drink Size</label>
+                    <select id="input-bev-size" class="swing-input w-full p-1.5 rounded">
+                        <option value="Small">Small</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Large">Large</option>
+                    </select>
+                    <label class="flex items-center gap-2 mt-2 text-slate-300">
+                        <input type="checkbox" id="input-is-iced" checked class="rounded bg-slate-900 border-slate-700">
+                        <span>Iced Beverage</span>
+                    </label>
+                `;
+            }
+        }
+
+        function handleCreateCatalogItem(e) {
+            e.preventDefault();
+            const id = document.getElementById("input-item-id").value.trim();
+            const name = document.getElementById("input-item-name").value.trim();
+            const price = parseFloat(document.getElementById("input-item-price").value);
+            const cat = document.getElementById("input-item-category").value;
+
+            if (menuCatalog.some(i => i.getId().toLowerCase() === id.toLowerCase())) {
+                alert(`Error: Item ID "${id}" already exists.`);
+                return;
+            }
+
+            let newItem;
+            if (cat === "Food") {
+                const prep = document.getElementById("input-prep-time").value;
+                const isVeg = document.getElementById("input-is-veg").checked;
+                newItem = new FoodItem(id, name, price, isVeg, prep);
+            } else {
+                const size = document.getElementById("input-bev-size").value;
+                const isIced = document.getElementById("input-is-iced").checked;
+                newItem = new BeverageItem(id, name, price, size, isIced);
+            }
+
+            menuCatalog.push(newItem);
+            logConsole(`Added new ${cat} catalog item: ${id}`);
+            renderCatalog();
+            toggleCatalogFormModal();
+        }
+
+        function showReceiptModal(receiptText) {
+            document.getElementById("receipt-text-block").innerText = receiptText;
+            document.getElementById("modal-receipt").classList.remove("hidden");
+        }
+
+        function closeReceiptModal() {
+            document.getElementById("modal-receipt").classList.add("hidden");
+        }
+
+        function logConsole(msg) {
+            const consoleDiv = document.getElementById("sim-console");
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement("div");
+            entry.innerText = `[${time}] ${msg}`;
+            consoleDiv.appendChild(entry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.remove("bg-blue-600", "text-white", "shadow");
+                btn.classList.add("text-slate-300");
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.add("bg-blue-600", "text-white", "shadow");
+            activeBtn.classList.remove("text-slate-300");
+        }
+
+        function copyJavaCode() {
+            const codeText = document.getElementById("java-code-block").innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = codeText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                const btnText = document.getElementById("copy-btn-text");
+                btnText.innerText = "Copied to Clipboard!";
+                setTimeout(() => { btnText.innerText = "Copy Entire Code"; }, 2500);
+            } catch (err) {
+                alert("Failed to copy source code.");
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
